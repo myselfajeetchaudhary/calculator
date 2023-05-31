@@ -1,0 +1,24 @@
+.container {
+  display: flex;
+  justify-content: center;
+}
+
+.calculator {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  width: fit-content;
+  height: 220px;
+}
+
+.display {
+  grid-column: 1/5;
+  grid-row: 1;
+  background-color: black;
+  opacity: 0.8;
+  font-size: x-large;
+  color: white;
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  padding-right: 10px;
+}

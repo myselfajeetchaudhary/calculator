@@ -1,60 +1,111 @@
-let num1;
-let num2;
-let operator;
-
-function add(num1, num2) {
-  return num1 + num2;
-}
-
-function subtract(num1, num2) {
-  return num1 - num2;
-}
-
-function multiply(num1, num2) {
-  return num1 * num2;
-}
-
-function divide(num1, num2) {
-  return num1 / num2;
-}
+let firstOperand = null;
+let secondOperand = null;
+let firstOperator = null;
+let secondOperator = null;
+let displayValue = 0;
 
 function operate(num1, num2, operator) {
   if (operator === "+") {
-    return add(num1, num2);
+    return num1 + num2;
   } else if (operator === "-") {
-    return subtract(num1, num2);
+    return num1 - num2;
   } else if (operator === "x") {
-    return multiply(num1, num2);
+    return num1 * num2;
   } else if (operator === "/") {
-    return divide(num1, num2);
+    return num1 / num2;
   }
 }
 
-function handleClick(e) {
-  const display = document.querySelector(".output");
-  display.textContent += e.target.textContent;
-  if (
-    e.target.textContent === "+" ||
-    e.target.textContent === "-" ||
-    e.target.textContent === "x" ||
-    e.target.textContent === "/"
-  ) {
-    num1 = display.textContent.slice(0, display.textContent.length - 1);
-    operator = display.textContent.slice(display.textContent.length - 1);
-    display.textContent = "";
-  } else if (e.target.textContent === "=") {
-    num2 = display.textContent.slice(0, display.textContent.length - 1);
-    display.textContent = operate(+num1, +num2, operator);
-  } else if (e.target.textContent === "Clear") {
-    display.textContent = "";
-  }
+function updateDisplay() {
+  const display = document.querySelector('.display');
+  display.textContent = displayValue;
 }
 
-function populateDisplay() {
-  const buttons = document.querySelectorAll("button");
+updateDisplay();
+
+function handleClick() {
+  const buttons = document.querySelectorAll('button');
+
   buttons.forEach((button) => {
-    button.addEventListener("click", handleClick);
+    button.addEventListener('click', (e) => {
+      if (button.className === "operand") {
+          onOperandClick(e.target.textContent);
+          updateDisplay();
+      } else if (button.className === "operator") {
+          onOperatorClick(e.target.textContent);
+      } else if (button.className === "equal") {
+          onEqualClick();
+          updateDisplay();
+      } else if (button.className === "clear") {
+          onClearClick();
+          updateDisplay();
+      }
+    });
   });
 }
 
-populateDisplay();
+handleClick();
+
+function onOperandClick(operand) {
+  if (firstOperand === null) {
+    // 1st input click- if display = 0
+    if (displayValue === 0 || displayValue === "0") {
+      displayValue = operand;
+    } else {
+      displayValue += operand;
+    }
+  } else {
+    // 3rd input click
+    if (displayValue === firstOperand) {
+      displayValue = operand;
+    } else {
+      displayValue += operand;
+    }
+  }
+}
+
+function onOperatorClick(operator) {
+  firstOperand = displayValue;
+  firstOperator = operator;
+}
+
+function onEqualClick() {
+  secondOperand = displayValue;
+  displayValue = operate(+firstOperand, +secondOperand, firstOperator);
+  firstOperand = displayValue;
+
+  console.log(firstOperand);
+  console.log(secondOperand);
+}
+
+function onClearClick() {
+  displayValue = 0;
+  firstOperand = null;
+  secondOperand = null;
+  firstOperator = null;
+  secondOperator = null;
+}
+
+// PASTE INSIDE onOperatorClick()
+
+// 4th input click
+//   if (firstOperator && secondOperator === null) {
+//     secondOperand = displayValue;
+//     secondOperator = operator;
+//   } else {
+//     // 2nd input click
+//     firstOperand = displayValue;
+//     firstOperator = operator;
+//   }
+
+//     if (firstOperand && secondOperand) {
+//       displayValue = operate(+firstOperand, +secondOperand, firstOperator);
+//       updateDisplay();
+//       firstOperand = displayValue;
+//       secondOperand = null;
+//     }
+
+//   console.log(firstOperand);
+//   console.log(firstOperator);
+//   console.log(secondOperand);
+//   console.log(secondOperator);
